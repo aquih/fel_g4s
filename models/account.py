@@ -68,7 +68,7 @@ class AccountInvoice(models.Model):
                         resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "VOID_DOCUMENT", xmls_base64, "XML")
                         logging.warn(str(resultado))
 
-                        if !resultado['Response']['Result']:
+                        if not resultado['Response']['Result']:
                             raise UserError(resultado['Response']['Description'])
 
 class AccountJournal(models.Model):
