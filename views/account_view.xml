@@ -15,7 +15,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="journal_form_fel_infile">
+        <record model="ir.ui.view" id="journal_form_fel_g4s">
             <field name="name">account.journal.form.fel_infile</field>
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="fel_gt.journal_form_fel_gt"/>

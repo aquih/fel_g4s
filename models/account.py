@@ -16,13 +16,14 @@ class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
     pdf_fel = fields.Binary('PDF FEL', copy=False)
+    pdf_fel_name = fields.Char('Nombre PDF FEL', default='pdf_fel.pdf', size=32)
 
     def invoice_validate(self):
         for factura in self:
-            if factura.firma_fel:
-                raise UserError("La factura ya fue validada, por lo que no puede ser validada nuevamnte")
-                
             if factura.journal_id.generar_fel:
+                if factura.firma_fel:
+                    raise UserError("La factura ya fue validada, por lo que no puede ser validada nuevamnte")
+                
                 dte = factura.dte_documento()
                 xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
                 logging.warn(xmls)
