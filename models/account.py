@@ -20,6 +20,7 @@ class AccountInvoice(models.Model):
 
     def invoice_validate(self):
         for factura in self:
+        for factura in self:    
             if factura.journal_id.generar_fel:
                 if factura.firma_fel:
                     raise UserError("La factura ya fue validada, por lo que no puede ser validada nuevamnte")
@@ -69,7 +70,7 @@ class AccountInvoice(models.Model):
                         resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "VOID_DOCUMENT", xmls_base64, "XML")
                         logging.warn(str(resultado))
 
-                        if !resultado['Response']['Result']:
+                        if not resultado['Response']['Result']:
                             raise UserError(resultado['Response']['Description'])
 
 class AccountJournal(models.Model):
