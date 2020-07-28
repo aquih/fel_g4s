@@ -9,7 +9,8 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="resultado_xml_fel" position="after">
-                        <field name="pdf_fel"/>
+                        <field name="pdf_fel_name" invisible="1"/>
+                        <field name="pdf_fel" readonly="1" filename="pdf_fel_name"/>
                     </field>
                 </data>
             </field>

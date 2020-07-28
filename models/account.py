@@ -19,7 +19,6 @@ class AccountInvoice(models.Model):
     pdf_fel_name = fields.Char('Nombre PDF FEL', default='pdf_fel.pdf', size=32)
 
     def invoice_validate(self):
-        for factura in self:
         for factura in self:    
             if factura.journal_id.generar_fel:
                 if factura.firma_fel:
@@ -32,7 +31,7 @@ class AccountInvoice(models.Model):
                 wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
                 client = zeep.Client(wsdl=wsdl)
 
-                resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "POST_DOCUMENT_SAT", xmls_base64, str(factura.id)+" XML PDF")
+                resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "POST_DOCUMENT_SAT", xmls_base64, str(factura.id))
                 logging.warn(str(resultado))
 
                 if resultado['Response']['Result']:
@@ -48,7 +47,10 @@ class AccountInvoice(models.Model):
                     factura.numero_fel = numero_autorizacion.get("Numero")
                     factura.documento_xml_fel = xmls_base64
                     factura.resultado_xml_fel = xml_resultado
-                    factura.pdf_fel = resultado['ResponseData']['ResponseData2']
+
+                    resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "GET_DOCUMENT", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, numero_autorizacion.text, "", "PDF")
+                    logging.warn(str(resultado))
+                    factura.pdf_fel = resultado['ResponseData']['ResponseData3']
                 else:
                     raise UserError(resultado['Response']['Description'])
 
