@@ -12,13 +12,13 @@ import base64
 import logging
 import zeep
 
-class AccountInvoice(models.Model):
+class AccountMove(models.Model):
     _inherit = "account.invoice"
 
     pdf_fel = fields.Binary('PDF FEL', copy=False)
     pdf_fel_name = fields.Char('Nombre PDF FEL', default='pdf_fel.pdf', size=32)
 
-    def invoice_validate(self):
+    def post(self):
         for factura in self:    
             if factura.journal_id.generar_fel:
                 if factura.firma_fel:
@@ -28,7 +28,9 @@ class AccountInvoice(models.Model):
                 xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
                 logging.warn(xmls)
                 xmls_base64 = base64.b64encode(xmls)
-                wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                wsdl = 'https://fel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                if factura.company_id.pruebas_fel:
+                    wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
                 client = zeep.Client(wsdl=wsdl)
 
                 resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "POST_DOCUMENT_SAT", xmls_base64, str(factura.id))
@@ -47,6 +49,7 @@ class AccountInvoice(models.Model):
                     factura.numero_fel = numero_autorizacion.get("Numero")
                     factura.documento_xml_fel = xmls_base64
                     factura.resultado_xml_fel = xml_resultado
+                    factura.certificador_fel = 'g4s' 
 
                     resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "GET_DOCUMENT", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, numero_autorizacion.text, "", "PDF")
                     logging.warn(str(resultado))
@@ -54,10 +57,10 @@ class AccountInvoice(models.Model):
                 else:
                     raise UserError(resultado['Response']['Description'])
 
-        return super(AccountInvoice,self).invoice_validate()
+        return super(AccountMove,self).invoice_validate()
 
-    def action_cancel(self):
-        result = super(AccountInvoice, self).action_cancel()
+    def button_cancel(self):
+        result = super(AccountMove, self).action_cancel()
         if result:
             for factura in self:
                 if factura.journal_id.generar_fel:
@@ -66,7 +69,9 @@ class AccountInvoice(models.Model):
                         xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
                         logging.warn(xmls)
                         xmls_base64 = base64.b64encode(xmls)
-                        wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                        wsdl = 'https://fel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                        if factura.company_id.pruebas_fel:
+                            wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
                         client = zeep.Client(wsdl=wsdl)
 
                         resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "VOID_DOCUMENT", xmls_base64, "XML")
@@ -83,5 +88,6 @@ class AccountJournal(models.Model):
 class ResCompany(models.Model):
     _inherit = "res.company"
     
-    requestor_fel = fields.Char('Requestor GFACE', copy=False)
-    usuario_fel = fields.Char('Usuario GFACE', copy=False)
+    requestor_fel = fields.Char('Requestor FEL', copy=False)
+    usuario_fel = fields.Char('Usuario FEL', copy=False)
+    pruebas_fel = fields.Boolean('Modo de Pruebas FEL')
