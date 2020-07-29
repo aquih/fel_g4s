@@ -13,7 +13,7 @@ import logging
 import zeep
 
 class AccountMove(models.Model):
-    _inherit = "account.invoice"
+    _inherit = "account.move"
 
     pdf_fel = fields.Binary('PDF FEL', copy=False)
     pdf_fel_name = fields.Char('Nombre PDF FEL', default='pdf_fel.pdf', size=32)
@@ -57,10 +57,10 @@ class AccountMove(models.Model):
                 else:
                     raise UserError(resultado['Response']['Description'])
 
-        return super(AccountMove,self).invoice_validate()
+        return super(AccountMove,self).post()
 
     def button_cancel(self):
-        result = super(AccountMove, self).action_cancel()
+        result = super(AccountMove, self).button_cancel()
         if result:
             for factura in self:
                 if factura.journal_id.generar_fel:
