@@ -89,3 +89,4 @@ class ResCompany(models.Model):
     
     requestor_fel = fields.Char('Requestor GFACE', copy=False)
     usuario_fel = fields.Char('Usuario GFACE', copy=False)
+    pruebas_fel = fields.Boolean('Modo de Pruebas FEL')
