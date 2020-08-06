@@ -28,7 +28,9 @@ class AccountInvoice(models.Model):
                 xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
                 logging.warn(xmls)
                 xmls_base64 = base64.b64encode(xmls)
-                wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                wsdl = 'https://fel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                if factura.company_id.pruebas_fel:
+                    wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
                 client = zeep.Client(wsdl=wsdl)
 
                 resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "POST_DOCUMENT_SAT", xmls_base64, str(factura.id))
@@ -66,7 +68,9 @@ class AccountInvoice(models.Model):
                         xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
                         logging.warn(xmls)
                         xmls_base64 = base64.b64encode(xmls)
-                        wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                        wsdl = 'https://fel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                        if factura.company_id.pruebas_fel:
+                            wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
                         client = zeep.Client(wsdl=wsdl)
 
                         resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "VOID_DOCUMENT", xmls_base64, "XML")
@@ -85,3 +89,4 @@ class ResCompany(models.Model):
     
     requestor_fel = fields.Char('Requestor FEL', copy=False)
     usuario_fel = fields.Char('Usuario FEL', copy=False)
+    pruebas_fel = fields.Boolean('Modo de Pruebas FEL')
