@@ -38,6 +38,7 @@
                     <field name="frases_fel" position="before">
                         <field name="requestor_fel"/>
                         <field name="usuario_fel"/>
+                        <field name="pruebas_fel"/>
                     </field>
                 </data>
             </field>
