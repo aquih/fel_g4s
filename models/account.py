@@ -22,7 +22,7 @@ class AccountInvoice(models.Model):
         for factura in self:    
             if factura.journal_id.generar_fel:
                 if factura.firma_fel:
-                    raise UserError("La factura ya fue validada, por lo que no puede ser validada nuevamnte")
+                    raise UserError("La factura ya fue validada, por lo que no puede ser validada nuevamente")
                 
                 dte = factura.dte_documento()
                 xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
@@ -83,5 +83,5 @@ class AccountJournal(models.Model):
 class ResCompany(models.Model):
     _inherit = "res.company"
     
-    requestor_fel = fields.Char('Requestor GFACE', copy=False)
-    usuario_fel = fields.Char('Usuario GFACE', copy=False)
+    requestor_fel = fields.Char('Requestor FEL', copy=False)
+    usuario_fel = fields.Char('Usuario FEL', copy=False)
