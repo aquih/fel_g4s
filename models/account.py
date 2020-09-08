@@ -81,6 +81,17 @@ class AccountMove(models.Model):
                         if not resultado['Response']['Result']:
                             raise UserError(resultado['Response']['Description'])
 
+    def obtener_pdf(self):
+        for factura in self:    
+            wsdl = 'https://fel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+            if factura.company_id.pruebas_fel:
+                wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+            client = zeep.Client(wsdl=wsdl)
+
+            resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "GET_DOCUMENT", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, factura.firma_fel, "", "PDF")
+            logging.warn(str(resultado))
+            factura.pdf_fel = resultado['ResponseData']['ResponseData3']
+
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
