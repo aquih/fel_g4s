@@ -21,9 +21,10 @@ class AccountMove(models.Model):
 
     def post(self):
         for factura in self:    
-            if factura.journal_id.generar_fel and factura.type in ['out_invoice', 'out_refund', 'in_invoice']:
-                if factura.firma_fel:
-                    raise UserError("La factura ya fue validada, por lo que no puede ser validada nuevamnte")
+            if factura.requiere_certificacion():
+
+                if factura.error_pre_validacion():
+                    return
                 
                 dte = factura.dte_documento()
                 xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
@@ -56,30 +57,33 @@ class AccountMove(models.Model):
                     logging.warn(str(resultado))
                     factura.pdf_fel = resultado['ResponseData']['ResponseData3']
                 else:
-                    raise UserError(resultado['Response']['Description'])
+                    factura.error_certificador(resultado['Response']['Description'])
+                    return
 
-        return super(AccountMove,self).post()
+                return super(AccountMove,self).post()
+
+            else:
+                return super(AccountMove,self).post()
 
     def button_cancel(self):
         result = super(AccountMove, self).button_cancel()
-        if result:
-            for factura in self:
-                if factura.journal_id.generar_fel:
-                    dte = factura.dte_anulacion()
-                    if dte:
-                        xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
-                        logging.warn(xmls)
-                        xmls_base64 = base64.b64encode(xmls)
-                        wsdl = 'https://fel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
-                        if factura.company_id.pruebas_fel:
-                            wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
-                        client = zeep.Client(wsdl=wsdl)
+        for factura in self:
+            if factura.requiere_certificacion() and factura.firma_fel:
+                dte = factura.dte_anulacion()
 
-                        resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "VOID_DOCUMENT", xmls_base64, "XML")
-                        logging.warn(str(resultado))
+                xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
+                logging.warn(xmls)
+                xmls_base64 = base64.b64encode(xmls)
+                wsdl = 'https://fel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                if factura.company_id.pruebas_fel:
+                    wsdl = 'https://pruebasfel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
+                client = zeep.Client(wsdl=wsdl)
 
-                        if not resultado['Response']['Result']:
-                            raise UserError(resultado['Response']['Description'])
+                resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "VOID_DOCUMENT", xmls_base64, "XML")
+                logging.warn(str(resultado))
+
+                if not resultado['Response']['Result']:
+                    raise UserError(resultado['Response']['Description'])
 
     def obtener_pdf(self):
         for factura in self:    
@@ -94,8 +98,6 @@ class AccountMove(models.Model):
 
 class AccountJournal(models.Model):
     _inherit = "account.journal"
-
-    generar_fel = fields.Boolean('Generar FEL')
 
 class ResCompany(models.Model):
     _inherit = "res.company"
