@@ -17,7 +17,6 @@ class AccountMove(models.Model):
 
     pdf_fel = fields.Binary('PDF FEL', copy=False)
     pdf_fel_name = fields.Char('Nombre PDF FEL', default='pdf_fel.pdf')
-    certificador_fel = fields.Char('Certificador FEL', default='g4s')
 
     def post(self):
         for factura in self:    
