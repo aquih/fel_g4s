@@ -4,7 +4,7 @@ Para adenda que envía correo:
 
 ```python
 attr_qname = etree.QName("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation")
-nsdef = { 'xsi':'http://www.w3.org/2001/XMLSchema-instance'}
+nsdef = {'xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
 CorreoElectronico = etree.SubElement(Adenda, "CorreoElectronico", {attr_qname: 'Schema-ediFactura esquemaAdendaEmail.xsd'}, xmlns="Schema-ediFactura", nsmap=nsdef)
 De = etree.SubElement(CorreoElectronico, "De")
 De.text = factura.company_id.email
