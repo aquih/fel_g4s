@@ -15,5 +15,6 @@ if factura.company_id.email and factura.partner_id.email:
     Asunto.text = "DOCUMENTO TRIBUTARIO ELECTRONICO"
     Adjuntos = etree.SubElement(CorreoElectronico, "Adjuntos")
     Adjuntos.text = "XML PDF"
-
+else:
+    Adenda.getparent().remove(Adenda)
 ```
