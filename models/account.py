@@ -48,11 +48,11 @@ class AccountMove(models.Model):
                 client = zeep.Client(wsdl=wsdl)
 
                 resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "POST_DOCUMENT_SAT", xmls_base64, factura.journal_id.code+str(factura.id))
-                logging.warn(str(resultado))
+                logging.warning(str(resultado))
 
                 if resultado['Response']['Result']:
                     xml_resultado = base64.b64decode(resultado['ResponseData']['ResponseData1'])
-                    logging.warn(xml_resultado)
+                    logging.warning(xml_resultado)
                     dte_resultado = etree.XML(xml_resultado)
 
                     numero_autorizacion =  dte_resultado.xpath("//*[local-name() = 'NumeroAutorizacion']")[0]
@@ -65,7 +65,7 @@ class AccountMove(models.Model):
                     factura.certificador_fel = 'g4s' 
 
                     resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "GET_DOCUMENT", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, numero_autorizacion.text, "", "PDF")
-                    logging.warn(str(resultado))
+                    logging.warning(str(resultado))
                     factura.pdf_fel = resultado['ResponseData']['ResponseData3']
                 else:
                     factura.error_certificador(resultado['Response']['Description'])
@@ -83,7 +83,7 @@ class AccountMove(models.Model):
                 dte = factura.dte_anulacion()
 
                 xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
-                logging.warn(xmls)
+                logging.warning(xmls.decode("utf-8"))
                 xmls_base64 = base64.b64encode(xmls)
                 wsdl = 'https://fel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
                 if factura.company_id.pruebas_fel:
@@ -91,7 +91,7 @@ class AccountMove(models.Model):
                 client = zeep.Client(wsdl=wsdl)
 
                 resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "SYSTEM_REQUEST", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, "VOID_DOCUMENT", xmls_base64, "XML")
-                logging.warn(str(resultado))
+                logging.warning(str(resultado))
 
                 if not resultado['Response']['Result']:
                     raise UserError(resultado['Response']['Description'])
@@ -104,7 +104,7 @@ class AccountMove(models.Model):
             client = zeep.Client(wsdl=wsdl)
 
             resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "GET_DOCUMENT", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, factura.firma_fel, "", "PDF")
-            logging.warn(str(resultado))
+            logging.warning(str(resultado))
             factura.pdf_fel = resultado['ResponseData']['ResponseData3']
 
 class AccountJournal(models.Model):
