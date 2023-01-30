@@ -19,8 +19,6 @@ class AccountMove(models.Model):
 
     pdf_fel = fields.Binary('PDF FEL', copy=False)
     pdf_fel_name = fields.Char('Nombre PDF FEL', default='pdf_fel.pdf')
-
-    pdf_fel = fields.Char('PDF FEL', copy=False)
     
     def _post(self, soft=True):
         if self.certificar():
