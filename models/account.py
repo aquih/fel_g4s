@@ -69,12 +69,9 @@ class AccountMove(models.Model):
                     factura.pdf_fel = resultado['ResponseData']['ResponseData3']
                 else:
                     factura.error_certificador(resultado['Response']['Description'])
-                    return
+                    return False
 
-                return super(AccountMove,self).post()
-
-            else:
-                return super(AccountMove,self).post()
+        return True
 
     def button_cancel(self):
         result = super(AccountMove, self).button_cancel()
