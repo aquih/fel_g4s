@@ -20,16 +20,27 @@ class AccountMove(models.Model):
     pdf_fel = fields.Binary('PDF FEL', copy=False)
     pdf_fel_name = fields.Char('Nombre PDF FEL', default='pdf_fel.pdf')
 
+    pdf_fel = fields.Char('PDF FEL', copy=False)
+    
+    def _post(self, soft=True):
+        if self.certificar():
+            return super(AccountMove, self)._post(soft)
+
     def post(self):
-        for factura in self:    
-            if factura.requiere_certificacion():
+        if self.certificar():
+            return super(AccountMove, self).post()
+    
+    def certificar(self):
+        for factura in self:
+            if factura.requiere_certificacion('g4s'):
+                self.ensure_one()
 
                 if factura.error_pre_validacion():
-                    return
+                    return False
                 
                 dte = factura.dte_documento()
                 xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
-                logging.warn(xmls)
+                logging.warning(xmls.decode("utf-8"))
                 xmls_base64 = base64.b64encode(xmls)
                 wsdl = 'https://fel.g4sdocumenta.com/webservicefront/factwsfront.asmx?wsdl'
                 if factura.company_id.pruebas_fel:
