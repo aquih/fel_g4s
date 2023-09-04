@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_partner_form_fel_g4s">
+            <field name="name">res.partner.form.fel_g4s</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="nombre_facturacion_fel" position="after">
+                        <br/>
+                        <button style="background-color:red;" name="obtener_nombre_facturacion_fel" 
+                            string="Obtener Nombre Facturación Fel" 
+                            class="btn-outline-primary " 
+                            type="object">
+                        </button>
+                        <br/><br/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
