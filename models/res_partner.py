@@ -8,6 +8,9 @@ class Partner(models.Model):
     _inherit = "res.partner"
             
     def obtener_nombre_facturacion_fel(self):
+        self._datos_sat()
+        
+    def _datos_sat(self):
         nit = self.nit_facturacion_fel
         if not nit:
             nit = self.vat

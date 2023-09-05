@@ -8,15 +8,15 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="nombre_facturacion_fel" position="after">
-                        <br/>
-                        <button style="background-color:red;" name="obtener_nombre_facturacion_fel" 
-                            string="Obtener Nombre Facturación Fel" 
-                            class="btn-outline-primary " 
-                            type="object">
-                        </button>
-                        <br/><br/>
-                    </field>
+                    <xpath expr="//sheet" position="before">
+                        <header>
+                            <button name="obtener_nombre_facturacion_fel" 
+                                string="Obtener Nombre Facturación Fel" 
+                                class="btn-outline-primary" 
+                                type="object">
+                            </button>
+                        </header>
+                    </xpath>
                 </data>
             </field>
         </record>
