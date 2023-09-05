@@ -16,12 +16,13 @@ class Partner(models.Model):
             if res['Result'] == True:
                 self.nombre_facturacion_fel = res['nombre']
             else:
-                self.nombre_facturacion_fel = res['error']
+                self.nombre_facturacion_fel = 'Nit no válido'
                 
     def _datos_sat(self, company, vat):
         if vat:
             client = zeep.Client(wsdl='http://fel.g4sdocumenta.com/ConsultaNIT/ConsultaNIT.asmx?wsdl')
             resultado = client.service.getNIT(vat, company.vat, company.requestor_fel)['Response']
+            resultado['nit'] = resultado['NIT']
             logging.warning(resultado)
             return resultado
         return {'nombre': '', 'nit': ''}
