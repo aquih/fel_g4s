@@ -8,17 +8,20 @@ class Partner(models.Model):
     _inherit = "res.partner"
             
     def obtener_nombre_facturacion_fel(self):
-        self._datos_sat()
-        
-    def _datos_sat(self):
         nit = self.nit_facturacion_fel
         if not nit:
             nit = self.vat
         if nit:
-            client = zeep.Client(wsdl='http://fel.g4sdocumenta.com/ConsultaNIT/ConsultaNIT.asmx?wsdl')
-            resultado = client.service.getNIT(nit, self.env.company.vat, self.env.company.requestor_fel)
-            logging.warning(str(resultado))
-            if resultado['Response']['Result']:
-                self.nombre_facturacion_fel = resultado['Response']['nombre']
+            res = self._datos_sat(self.env.company, nit)
+            if res['Result'] == True:
+                self.nombre_facturacion_fel = res['nombre']
             else:
-                self.nombre_facturacion_fel = 'NIT no valido'
+                self.nombre_facturacion_fel = res['error']
+                
+    def _datos_sat(self, company, vat):
+        if vat:
+            client = zeep.Client(wsdl='http://fel.g4sdocumenta.com/ConsultaNIT/ConsultaNIT.asmx?wsdl')
+            resultado = client.service.getNIT(vat, company.vat, company.requestor_fel)['Response']
+            logging.warning(resultado)
+            return resultado
+        return {'nombre': '', 'nit': ''}
