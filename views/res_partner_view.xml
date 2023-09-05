@@ -11,7 +11,7 @@
                     <xpath expr="//sheet" position="before">
                         <header>
                             <button name="obtener_nombre_facturacion_fel" 
-                                string="Obtener Nombre Facturación Fel" 
+                                string="Obtener Nombre Facturación FEL" 
                                 class="btn-outline-primary" 
                                 type="object">
                             </button>
