@@ -25,6 +25,6 @@ class Partner(models.Model):
             if resultado['Result'] == True:
                 return {'nombre': resultado['nombre'], 'nit': resultado['NIT']}
             else:
-                raise ValidationError(res['error'])
+                raise ValidationError(resultado['error'])
                 
         return {'nombre': '', 'nit': ''}
