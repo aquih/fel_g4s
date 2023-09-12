@@ -35,6 +35,9 @@ class AccountMove(models.Model):
 
                 if factura.error_pre_validacion():
                     return False
+                    
+                if factura.company_id.buscar_nombre_para_dte_fel and not factura.partner_id.nombre_facturacion_fel:
+                    factura.partner_id.nombre_facturacion_fel = factura.partner_id._datos_sat(factura.company_id, factura.partner_id.vat)['nombre']
                 
                 dte = factura.dte_documento()
                 xmls = etree.tostring(dte, xml_declaration=True, encoding="UTF-8")
@@ -111,3 +114,4 @@ class ResCompany(models.Model):
     requestor_fel = fields.Char('Requestor FEL', copy=False)
     usuario_fel = fields.Char('Usuario FEL', copy=False)
     pruebas_fel = fields.Boolean('Modo de Pruebas FEL')
+    buscar_nombre_para_dte_fel = fields.Boolean('Buscar nombre en SAT para enviar al certificador')
