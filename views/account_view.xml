@@ -44,6 +44,7 @@
                         <field name="requestor_fel"/>
                         <field name="usuario_fel"/>
                         <field name="pruebas_fel"/>
+                        <field name="buscar_nombre_para_dte_fel"/>
                     </field>
                 </data>
             </field>
