@@ -70,7 +70,6 @@ class AccountMove(models.Model):
                     factura.pdf_fel = resultado['ResponseData']['ResponseData3']
                 else:
                     factura.error_certificador(resultado['Response']['Description'])
-                    return False
 
         return True
 
