@@ -48,8 +48,8 @@ class AccountMove(models.Model):
                 logging.warning(str(resultado))
 
                 if resultado['Response']['Result']:
-                    xml_resultado = base64.b64decode(resultado['ResponseData']['ResponseData1'])
-                    logging.warning(xml_resultado)
+                    xml_resultado = resultado['ResponseData']['ResponseData1']
+                    logging.warning(base64.b64decode(xml_resultado))
                     dte_resultado = etree.XML(xml_resultado)
 
                     numero_autorizacion =  dte_resultado.xpath("//*[local-name() = 'NumeroAutorizacion']")[0]
@@ -62,7 +62,6 @@ class AccountMove(models.Model):
                     factura.certificador_fel = 'g4s' 
 
                     resultado = client.service.RequestTransaction(factura.company_id.requestor_fel, "GET_DOCUMENT", "GT", factura.company_id.vat, factura.company_id.requestor_fel, factura.company_id.usuario_fel, numero_autorizacion.text, "", "PDF")
-                    logging.warning(str(resultado))
                     factura.pdf_fel = resultado['ResponseData']['ResponseData3']
                 else:
                     factura.error_certificador(resultado['Response']['Description'])
