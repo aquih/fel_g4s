@@ -53,7 +53,7 @@ class AccountMove(models.Model):
 
                 if resultado['Response']['Result']:
                     xmls_resultado_base64 = resultado['ResponseData']['ResponseData1']
-                    xmls_resultado = base64.b64decode(xmls_resultado)
+                    xmls_resultado = base64.b64decode(xmls_resultado_base64)
                     logging.warning(xmls_resultado)
                     dte_resultado = etree.XML(xmls_resultado)
 
