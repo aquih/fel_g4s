@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="invoice_form_fel_g4s">
-        <field name="name">account.invoice.form.fel_g4s</field>
+    <record model="ir.ui.view" id="view_move_form">
+        <field name="name">account.move.form.inherit.fel_g4s</field>
         <field name="model">account.move</field>
-        <field name="inherit_id" ref="fel_gt.invoice_form_fel_gt"/>
+        <field name="inherit_id" ref="fel_gt.view_move_form"/>
         <field name="arch" type="xml">
             <data>
                 <button name="button_draft" position="after">
@@ -24,10 +24,10 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="journal_form_fel_g4s">
-        <field name="name">account.journal.form.fel_g4s</field>
+    <record model="ir.ui.view" id="view_account_journal_form">
+        <field name="name">account.journal.form.inherit.fel_g4s</field>
         <field name="model">account.journal</field>
-        <field name="inherit_id" ref="fel_gt.journal_form_fel_gt"/>
+        <field name="inherit_id" ref="fel_gt.view_account_journal_form"/>
         <field name="arch" type="xml">
             <data>
                 <field name="tipo_documento_fel" position="after">
@@ -36,10 +36,10 @@
         </field>
     </record>
 
-    <record id="view_company_form_fel_g4s" model="ir.ui.view">
-        <field name="name">res.company.form.fel_g4s</field>
+    <record  model="ir.ui.view" id="view_company_form">
+        <field name="name">res.company.form.inherit.fel_g4s</field>
         <field name="model">res.company</field>
-        <field name="inherit_id" ref="fel_gt.view_company_form_fel_gt"/>
+        <field name="inherit_id" ref="fel_gt.view_company_form"/>
         <field name="arch" type="xml">
             <data>
                 <field name="frases_fel" position="before">
