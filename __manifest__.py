@@ -2,7 +2,7 @@
 
 {
     'name': 'FEL G4S',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Custom',
     'description': """ Integración con factura electrónica de G4S """,
     'author': 'Rodrigo Fernandez',
