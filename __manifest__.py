@@ -13,6 +13,6 @@
         'views/res_partner_view.xml',
     ],
     'demo': [],
-    'installable': True
+    'installable': True,
     'license': 'Other OSI approved licence',
 }
