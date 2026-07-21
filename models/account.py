@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 
 from odoo import models, fields, api, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 import odoo.addons.l10n_gt_extra.a_letras

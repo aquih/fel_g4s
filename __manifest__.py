@@ -2,11 +2,11 @@
 
 {
     'name': 'FEL G4S',
-    'version': '1.2',
+    'version': '1.3',
     'category': 'Custom',
     'description': """ Integración con factura electrónica de G4S """,
-    'author': 'Rodrigo Fernandez',
-    'website': 'http://aquih.com/',
+    'author': 'aquíH',
+    'website': 'http://www.aquih.com/',
     'depends': ['fel_gt'],
     'data': [
         'views/account_view.xml',
@@ -14,5 +14,5 @@
     ],
     'demo': [],
     'installable': True
+    'license': 'Other OSI approved licence',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
